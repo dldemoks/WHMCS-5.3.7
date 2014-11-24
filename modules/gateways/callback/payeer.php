@@ -1,4 +1,4 @@
-<?phpphp
+<?php
 include("../../../dbconnect.php");
 include("../../../includes/functions.php");
 include("../../../includes/gatewayfunctions.php");
