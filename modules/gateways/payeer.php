@@ -59,7 +59,7 @@ function payeer_link($params)
 	$m_url = $params['payeer_url'];
 	$m_shop = $params['payeer_shop'];
 	$m_orderid = $params['invoiceid'];
-	$m_amount = $params['amount'];
+	$m_amount = number_format($params['amount'], 2, '.', '');
 	$m_curr = $params['curr']['code'];
 	$m_desc = base64_encode($params['payeer_comment']);
 	$m_key = $params['payeer_secret_key'];
