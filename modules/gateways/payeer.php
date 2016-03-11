@@ -7,10 +7,10 @@ function payeer_config()
 			'Value' => 'Payeer'
 		),
 		'payeer_url' => array(
-			'FriendlyName' => 'URL мерчанта (по умолчанию, //payeer.com/merchant/)',
+			'FriendlyName' => 'URL мерчанта (по умолчанию, https://payeer.com/merchant/)',
 			'Type' => 'text',
 			'Size' => '20',
-			'Default' => '//payeer.com/merchant/'
+			'Default' => 'https://payeer.com/merchant/'
 		),
 		'payeer_shop' => array(
 		  'FriendlyName' => 'Идентификатор магазина',
@@ -19,11 +19,6 @@ function payeer_config()
 		),
 		'payeer_secret_key' => array(
 		  'FriendlyName' => 'Секретный ключ',
-		  'Type' => 'text',
-		  'Size' => '20'
-		),
-		'payeer_comment' => array(
-		  'FriendlyName' => 'Комментарий к оплате',
 		  'Type' => 'text',
 		  'Size' => '20'
 		),
@@ -50,18 +45,13 @@ function payeer_config()
 function payeer_link($params) 
 {
 	global $_LANG;
-
-	if (isset($params['convertto'])) 
-	{
-		$params['curr'] = getCurrency(0, $params['convertto']);
-	}
 	
 	$m_url = $params['payeer_url'];
 	$m_shop = $params['payeer_shop'];
 	$m_orderid = $params['invoiceid'];
 	$m_amount = number_format($params['amount'], 2, '.', '');
-	$m_curr = $params['curr']['code'];
-	$m_desc = base64_encode($params['payeer_comment']);
+	$m_curr = ($params['currency'] == 'RUR') ? 'RUB' : $params['currency'];
+	$m_desc = base64_encode($params['description']);
 	$m_key = $params['payeer_secret_key'];
 	
 	$arHash = array(
