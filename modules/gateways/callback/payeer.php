@@ -17,17 +17,17 @@ if (isset($_POST['m_operation_id']) && isset($_POST['m_sign']))
 	
 	$log_text = 
 		"--------------------------------------------------------\n".
-		"operation id		" . $_POST["m_operation_id"] . "\n".
-		"operation ps		" . $_POST["m_operation_ps"] . "\n".
-		"operation date		" . $_POST["m_operation_date"] . "\n".
-		"operation pay date	" . $_POST["m_operation_pay_date"] . "\n".
-		"shop				" . $_POST["m_shop"] . "\n".
-		"order id			" . $_POST['m_orderid'] . "\n".
-		"amount				" . $_POST["m_amount"] . "\n".
-		"currency			" . $_POST["m_curr"] . "\n".
-		"description		" . base64_decode($_POST["m_desc"]) . "\n".
-		"status				" . $_POST["m_status"] . "\n".
-		"sign				" . $_POST["m_sign"] . "\n\n";
+		"operation id       " . $_POST["m_operation_id"] . "\n".
+		"operation ps       " . $_POST["m_operation_ps"] . "\n".
+		"operation date     " . $_POST["m_operation_date"] . "\n".
+		"operation pay date " . $_POST["m_operation_pay_date"] . "\n".
+		"shop               " . $_POST["m_shop"] . "\n".
+		"order id           " . $_POST['m_orderid'] . "\n".
+		"amount             " . $_POST["m_amount"] . "\n".
+		"currency           " . $_POST["m_curr"] . "\n".
+		"description        " . base64_decode($_POST["m_desc"]) . "\n".
+		"status             " . $_POST["m_status"] . "\n".
+		"sign               " . $_POST["m_sign"] . "\n\n";
 
 	$log_file = $gateway['payeer_logfile'];
 	
@@ -35,6 +35,8 @@ if (isset($_POST['m_operation_id']) && isset($_POST['m_sign']))
 	{
 		file_put_contents($_SERVER['DOCUMENT_ROOT'] . $log_file, $log_text, FILE_APPEND);
 	}
+	
+	checkCbInvoiceID($_POST['m_orderid'], $gateway['name']);
 	
 	// проверка цифровой подписи и ip
 
@@ -86,13 +88,15 @@ if (isset($_POST['m_operation_id']) && isset($_POST['m_sign']))
 		switch ($_POST['m_status'])
 		{
 			case 'success':
-				addInvoicePayment($_POST['m_orderid'], $_POST["m_operation_id"], $payed, '', $gatewaymodule);
+				echo $_POST['m_orderid'] . '|success';
+				checkCbTransID($_POST["m_operation_id"]);
+				addInvoicePayment($_POST['m_orderid'], $_POST["m_operation_id"], $_POST["m_amount"], '', $gatewaymodule);
 				logTransaction($gateway['name'], $_POST, 'Successful');
 				break;
 				
 			default:
-				$message .= " - статус платежа не является success\n";
-				logTransaction($gateway["name"], $event, "Unsuccessful");
+				$message .= " - the payment status is not success\n";
+				logTransaction($gateway["name"], $_POST, "Unsuccessful");
 				$err = true;
 				break;
 		}
@@ -110,10 +114,6 @@ if (isset($_POST['m_operation_id']) && isset($_POST['m_sign']))
 			mail($to, 'Payment error', $message, $headers);
 		}
 		
-		exit($_POST['m_orderid'] . '|error');
-	}
-	else
-	{
-		exit($_POST['m_orderid'] . '|success');
+		echo $_POST['m_orderid'] . '|error';
 	}
 }
