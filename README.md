@@ -1,8 +1,8 @@
 WHMCS
 ======
-Модуль оплаты Payeer
+Payment module Payeer
 
-Для установки модуля скачайте все файлы.
-Далее следуйте прилагаемой инструкции
+To install the module, download all the files.
+Then follow the attached instructions.
 
-Поддержка версии CMS WHMCS 5.3.7
+Support for CMS WHMCS 5.3.7
